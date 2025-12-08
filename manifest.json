@@ -1,0 +1,63 @@
+{
+   "update_url": "https://clients2.google.com/service/update2/crx",
+   "manifest_version": 3,
+   "version": "1.9.92",
+   "author": "Javad Motallebi",
+   "description": "Sends Download Links to Neat Download Manager",
+   "name": "NeatDownloadManager Extension",
+   "action": {
+      "default_icon": {
+         "16": "img/icon16.png"
+      }
+   },
+   "background": {
+      "service_worker": "bg.js"
+   },
+   "content_scripts": [
+      {
+         "js": [
+            "ct.js"
+         ],
+         "matches": [
+            "http://*/*",
+            "https://*/*"
+         ],
+         "all_frames": true,
+         "run_at": "document_start"
+      }
+   ],
+   "web_accessible_resources": [
+      {
+         "resources": [
+            "img/icon16.png",
+            "img/icon16_2x.png",
+            "img/close16.png",
+            "img/close16_2x.png"
+         ],
+         "matches": [
+            "<all_urls>"
+         ]
+      }
+   ],
+   "permissions": [
+      "webRequest",
+      "webNavigation",
+      "cookies",
+      "contextMenus",
+      "storage",
+      "downloads"
+   ],
+   "host_permissions": [
+      "<all_urls>"
+   ],
+   "icons": {
+      "128": "img/icon128.png",
+      "16": "img/icon16.png",
+      "48": "img/icon48.png"
+   },
+   "homepage_url": "https://www.neatdownloadmanager.com/",
+   "options_ui": {
+      "page": "options.html",
+      "open_in_tab": false
+   }
+}
