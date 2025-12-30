@@ -9,6 +9,7 @@
 ![alt text](<Cl 2025-12-30 09.12.22.png>)
 # 使用方法
 在目标网站右键点击 Block downloads 后刷新一下页面。
+
 如果要打开下载在目标网站右键点击 Download 。
 
 
