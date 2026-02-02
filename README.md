@@ -6,7 +6,12 @@
 
 ![](https://github.com/yizhimuzhuozi/NeatDownloadManager-Extension/blob/main/im/Cl%202025-12-30%2009.12.22.png?raw=true)
 
+### 之前
+
 ![之前](https://github.com/yizhimuzhuozi/NeatDownloadManager-Extension/blob/main/im/%E4%B9%8B%E5%89%8D.jpeg?raw=true)
+
+### 之后
+
 ![之后](https://github.com/yizhimuzhuozi/NeatDownloadManager-Extension/blob/main/im/%E4%B9%8B%E5%90%8E.jpeg?raw=true)
 
 # 使用方法
@@ -25,3 +30,7 @@
   - "Download by NeatDownloadManager"改成"Download"
   - "Block downloads from this website"改成"Block downloads"
   - "Unblock downloads from this website"改成"Unblock downloads"
+
+2026-02-02
+
+- 添加图片展示
