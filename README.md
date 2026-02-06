@@ -1,4 +1,4 @@
-# NeatDownloadManager-Extension
+## NeatDownloadManager-Extension
 
 <img src="https://github.com/yizhimuzhuozi/NeatDownloadManager-Extension/blob/main/im/Cl%202025-12-30%2009.12.22.png?raw=true" width="50%">
 
@@ -12,13 +12,25 @@
 
 ![之后](https://github.com/yizhimuzhuozi/NeatDownloadManager-Extension/blob/main/im/%E4%B9%8B%E5%90%8E.jpeg?raw=true)
 
-# 使用方法
+## Chrome 安装
+
+1. 下载并解压扩展
+2. 打开 Chrome 扩展程序
+3. 开启右上角的 "开发者模式"
+4. 把 NeatDownloadManager-Extension 文件夹拖到 Chrome 扩展程序中
+
+注意：解压后的 NeatDownloadManager-Extension 文件夹不能删除，否则无法使用，可以存放到固定位置
+
+
+
+
+## 使用方法
 
 在目标网站右键点击 Block downloads 后刷新一下页面。
 
 如果要打开下载在目标网站右键点击 Download 。
 
-# 更新日志
+## 更新日志
 
 2025-12-30
 
@@ -32,3 +44,7 @@
 2026-02-02
 
 - 添加图片展示
+
+2026-02-06
+
+- 添加安装说明
