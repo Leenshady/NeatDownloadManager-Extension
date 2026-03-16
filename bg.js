@@ -61,8 +61,6 @@ function U() {
 V.X = function (a) {
     // Added early block check for downloads
     if (isURLBlocked(a.url, a.referrer) || isURLBlocked(a.finalUrl, a.referrer)) {
-        chrome.downloads.cancel(a.id);
-        chrome.downloads.erase({ id: a.id });
         return;
     }
     h || !this.v ? this.u = "" : this.u != a.finalUrl && this.u != a.url ? this.u = "" : (this.u = "", chrome.downloads.cancel(a.id), chrome.downloads.erase({ id: a.id }))
@@ -118,7 +116,7 @@ V.V = function (a) {
 function S(a, b) { var c = L(a.o, "Content-Type"), d = L(a.o, "Content-Disposition"); a = fa(a.ja, c); if (!a || 1 > a.length) a = null; b.postData = a; c && (b["10"] = c.trim()); d && (b["11"] = d.trim()) } function Y(a, b) { if (a.o) for (var c = 0; c < a.o.length; c++)N(a.o[c].name.toLowerCase(), "x-") && (b[a.o[c].name] = a.o[c].value) } V.U = function (a) { if (!(0 > a.tabId || 0 > a.frameId)) { var b = this.m[a.requestId]; b && (b.o = a.requestHeaders) } };
 V.T = function (a) {
     // Added early block check
-    if (isURLBlocked(a.url, a.initiator)) return { cancel: true };
+    if (isURLBlocked(a.url, a.initiator)) return ;
     if (!(0 > a.tabId || 0 > a.frameId)) if ("ftp" == Q(a.url)) { if (G(a.url) && !h) { var b = new T, c = this.h[[a.tabId, 0]]; c && c["2"] && (b["5"] = c["2"], b.pageUrl = c["2"]); c && c["4"] && (b["4"] = c["4"]); b["2"] = a.url; this.I(b) } } else b = a.requestId, c = this.m[b] || { id: b, 2: a.url, tabId: a.tabId, frameId: a.frameId }, "POST" == a.method.toUpperCase() && (c.ja = a.requestBody), this.m[b] = c
 };
 function Z(a, b) { if (!a) return null; b = b.toLowerCase(); a = a.split(";"); a.shift(); for (var c = 0; c < a.length; c++) { var d = a[c], e = d.indexOf("="); if (0 < e) { var f = d.substr(0, e).trim().toLowerCase(), g = "*" == f[f.length - 1]; g && (f = f.substr(0, f.length - 1).trimRight()); if (f == b) return a = d.substr(e + 1).trim(), c = a.length - 1, '"' == a[0] && '"' == a[c] && (a = a.substring(1, c)), g && (a = a.split("'", 3).pop()), unescape(a) } else if (0 > e && d.trim().toLowerCase() == b) return "" } return null } V.j = function (a) { a.addListener.apply(a, Array.prototype.slice.call(arguments).slice(1)) };
