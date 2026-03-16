@@ -1,4 +1,6 @@
 var blockedHosts = [];
+// 临时放行的 URL 白名单，使用 Set 存储
+const tempWhitelist = new Set();
 function updateBlockedHosts() {
     chrome.storage.local.get(['blockedHosts'], function (result) {
         blockedHosts = result.blockedHosts || [];
@@ -37,7 +39,20 @@ chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
         updateContextMenu(tabId);
     }
 });
+chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
+    if (message.action === 'tempWhitelist' && message.url) {
+        // 标准化 URL（例如移除末尾的 / 或查询参数？但最好保留原样）
+        const url = message.url;
+        tempWhitelist.add(url);
+        //console.log('临时放行 URL:', url);
 
+        // 5 秒后自动移除
+        setTimeout(() => {
+            tempWhitelist.delete(url);
+            //console.log('临时放行过期:', url);
+        }, 5000);
+    }
+});
 var h = !1, q = RegExp("^bytes [0-9]+-[0-9]+/([0-9]+)$"), w = "object xmlhttprequest media other main_frame sub_frame image".split(" "), z = ["object", "xmlhttprequest", "media", "other"], A = RegExp("://.+/([^/]+?(?:.([^./]+?))?)(?=[?#]|$)"), aa = [301, 302, 303, 307, 308], ba = RegExp("^(?:application/x-apple-diskimage|application/download|application/force-download|application/x-msdownload|binary/octet-stream)$", "i"), B = RegExp("^(?:FLV|SWF|MP3|MP4|M4V|F4F|F4V|M4A|MPG|MPEG|MPEG4|MPE|AVI|WMV|WMA|WAV|WAVE|ASF|RM|RAM|OGG|OGV|OGM|OGA|MOV|MID|MIDI|3GP|3GPP|QT|WEBM|TS|MKV|AAC|MP2T|MPEGTS|RMVB|VTT|SRT)$",
     "i"), ca = RegExp("^(?:HTM|HTML|MHT|MHTML|SHTML|SHTM|XHT|XHTM|XHTML|XML|TXT|CSS|JS|JSON|GIF|ICO|JPEG|JPG|PNG|WEBP|BMP|SVG|TIF|TIFF|PDF|PHP|ASP|ASPX|EOT|TTF|WOF|WOFF|WOFF2|MSG|PEM|BR|OTF|ACZ|AZC|CGI|TPL|OSD|M3U8|DO|DICT)$", "i"), da = RegExp("^(?:FLV|AVI|MPG|MPE|WMV|QT|MOV|RM|RAM|WMA|MID|MIDI|AAC|MKV|RMVB)$", "i"), C = RegExp("^(?:F4F|MPEGTS|TS|MP2T)$", "i"), E = {
         "application/x-apple-diskimage": "DMG", "application/cert-chain+cbor": "MSG", "application/epub+zip": "EPUB", "application/java-archive": "JAR", "video/x-matroska": "MKV",
@@ -59,6 +74,13 @@ function U() {
     this.M(); var c = this; this.F = !0; chrome.storage.local.get(["ShowMediaPanel"], function (d) { -1 == d.ShowMediaPanel && (c.F = !1) }); this.i = this.G = null; this.D = !1; this.L()
 } var V = U.prototype; V.M = function () { var a = (this.v = !this.v) ? "" : "Off"; chrome.action.setTitle({ title: this.v ? "" : "Download catcher is Off\r\nClick to toggle catching" }); chrome.action.setBadgeText({ text: a }) }; V.Y = function (a) { var b = this.h[[a.tabId, a.frameId]]; b && b["2"] != a.url && (b.postMessage([11, a.url]), b["2"] = a.url) };
 V.X = function (a) {
+    // 检查白名单
+    if (tempWhitelist.has(a.url) || tempWhitelist.has(a.finalUrl)) {
+        // 若匹配，从白名单移除并放行（不取消）
+        tempWhitelist.delete(a.url);
+        tempWhitelist.delete(a.finalUrl);
+        return;
+    }
     // Added early block check for downloads
     if (isURLBlocked(a.url, a.referrer) || isURLBlocked(a.finalUrl, a.referrer)) {
         return;
@@ -89,6 +111,10 @@ function fa(a, b) {
         e) { (f = Z(b, "boundary")) || (f = "----WebKitFormBoundary" + Math.random().toString(36).substr(2)); for (d in c) for (e = c[d], b = 0; b < e.length; b++)a.push("--", f, '\r\nContent-Disposition: form-data; name="', d, '"\r\n\r\n', e[b], "\r\n"); a.push("--", f, "--\r\n"); return a.join("") } return null
 }
 V.V = function (a) {
+    if (tempWhitelist.has(a.url)) {
+        tempWhitelist.delete(a.url);
+        return;
+    }
     if (isURLBlocked(a.url, a.initiator)) return; var b, c = a.requestId, d = this; if (b = this.m[c]) {
         var e = a.url, f = a.type, g = 0 <= z.indexOf(f), m = a.method.toUpperCase(), u = Q(e); if (!u || "http" != u && "https" != u || "GET" != m && "POST" != m) delete this.m[c]; else {
             b.B = a.responseHeaders; var n = L(b.B, "Content-Type"), p = F(n).toLowerCase(); if ("image" == f && p && N(p.toLowerCase(), "image/")) delete this.m[c]; else {
@@ -115,6 +141,12 @@ V.V = function (a) {
 };
 function S(a, b) { var c = L(a.o, "Content-Type"), d = L(a.o, "Content-Disposition"); a = fa(a.ja, c); if (!a || 1 > a.length) a = null; b.postData = a; c && (b["10"] = c.trim()); d && (b["11"] = d.trim()) } function Y(a, b) { if (a.o) for (var c = 0; c < a.o.length; c++)N(a.o[c].name.toLowerCase(), "x-") && (b[a.o[c].name] = a.o[c].value) } V.U = function (a) { if (!(0 > a.tabId || 0 > a.frameId)) { var b = this.m[a.requestId]; b && (b.o = a.requestHeaders) } };
 V.T = function (a) {
+    // 检查临时白名单：如果在白名单内，直接放行（不记录、不取消）
+    if (tempWhitelist.has(a.url)) {
+        // 可选：移除已匹配的条目，避免后续重复使用（若想仅放行一次）
+        tempWhitelist.delete(a.url);
+        return; // 让请求正常进行
+    }
     // Added early block check
     if (isURLBlocked(a.url, a.initiator)) return ;
     if (!(0 > a.tabId || 0 > a.frameId)) if ("ftp" == Q(a.url)) { if (G(a.url) && !h) { var b = new T, c = this.h[[a.tabId, 0]]; c && c["2"] && (b["5"] = c["2"], b.pageUrl = c["2"]); c && c["4"] && (b["4"] = c["4"]); b["2"] = a.url; this.I(b) } } else b = a.requestId, c = this.m[b] || { id: b, 2: a.url, tabId: a.tabId, frameId: a.frameId }, "POST" == a.method.toUpperCase() && (c.ja = a.requestBody), this.m[b] = c
