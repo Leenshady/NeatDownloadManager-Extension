@@ -84,3 +84,19 @@ if (!window.m) {
         chrome.runtime.connect({ name: "neat" }); this.port.onMessage.addListener(this.V.bind(this)); this.port.onDisconnect.addListener(this.W.bind(this))
     }; new N
 };
+
+document.addEventListener('click', function (e) {
+    // 检查是否按住了 Ctrl 键
+    if (!e.ctrlKey) return;
+
+    // 获取实际点击的链接元素
+    let target = e.target.closest('a');
+    if (!target) return;
+
+    // 获取链接的 href 属性
+    let href = target.href;
+    if (!href) return;
+
+    // 发送消息给后台，通知该 URL 需要临时放行
+    chrome.runtime.sendMessage({ action: 'tempWhitelist', url: href });
+}, true); // 使用捕获阶段以确保能尽早处理
