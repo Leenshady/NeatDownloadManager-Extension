@@ -53,5 +53,6 @@
 2026-3-16
 
 - 修复被屏蔽的网站所有下载链接会被拦截问题，现在被屏蔽的网址所有的下载链接都会绕过NDM且被放行
+  - [Leenshady](https://github.com/Leenshady)  提供帮助
 - 增加临时绕过NDM下载功能，按住Ctrl键点击下载链接可以绕过NDM进行下载
-  - [Leenshady](https://github.com/Leenshady) 提供
+  - [Leenshady](https://github.com/Leenshady)  提供帮助
